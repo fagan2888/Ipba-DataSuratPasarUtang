@@ -58,6 +58,12 @@ soup = BeautifulSoup(all_html,"html.parser")
 
 datasets = []
 
+date = soup.find("span",{"id": "dnn_ctr695_INDOBEX_Data_lblDate"},text = True)
+day = soup.find("span",{"id": "dnn_ctr695_INDOBEX_Data_lblDay"},text = True)
+
+all_date = day.get_text()+" "+date.get_text() + " \n"
+print(all_date)
+
 for table in soup.findAll("table", {"id": "dnn_ctr695_INDOBEX_Data_gvDailyDate"}):
 	for row in table.findAll("tr")[3:]:
 		isinya = [td.get_text().replace("  ","") for td in row.findAll("td") if td.get_text()]
@@ -65,7 +71,12 @@ for table in soup.findAll("table", {"id": "dnn_ctr695_INDOBEX_Data_gvDailyDate"}
 		if isinya == []:
 			datasets.remove(isinya)
 print(*datasets, sep = "\n")
+
 company = "C:/Users/BN001166774/Documents/Pasardana.id/IPBA Table/Temp/ipba_table.csv"
+f = open(company, "a")
+f.write(all_date)
+f.close()
+
 with open(company, 'a') as filehandle:
 	filehandle.writelines("%s\n".replace("[","").replace("]","").replace("'","") % table for table in datasets)
 
